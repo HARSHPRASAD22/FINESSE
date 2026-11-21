@@ -3,7 +3,7 @@ services:
     name: permitpilot-private-demo
     runtime: docker
     region: singapore
-    plan: 0.5c-512mb
+    plan: free
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /healthz
@@ -18,7 +18,3 @@ services:
         sync: false
       - key: DEMO_SESSION_SECRET
         generateValue: true
-    disk:
-      name: permitpilot-demo-data
-      mountPath: /var/data
-      sizeGB: 1

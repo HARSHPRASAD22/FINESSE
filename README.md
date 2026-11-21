@@ -81,12 +81,14 @@ uv run --no-sync python -m pytest
 Remove-Item -LiteralPath $testRoot -Recurse -Force
 ```
 
-## Deploy the private demo to Render
+## Deploy the free private demo to Render
 
-1. Push the repository to GitHub and create a Render **Blueprint** from it.
-   Render reads `render.yaml`, builds the root `Dockerfile`, and provisions a
-   persistent disk. The configured 0.5 CPU/512 MB service and disk are paid resources;
-   confirm current pricing before creating them.
+1. In Render, create a **Blueprint** from this GitHub repository and select the
+   `main` branch. Render reads `render.yaml` and builds the root `Dockerfile`.
+   The blueprint uses a Free web service and does not create a paid persistent
+   disk. Free services sleep after 15 minutes without traffic and can take about
+   a minute to wake. The local SQLite database and uploaded files are temporary:
+   they can be lost whenever the service sleeps, restarts, or redeploys.
 2. Set `DEMO_ACCESS_CODE` in the Render service environment to a generated
    secret of at least 20 characters. Generate one locally with:
 
@@ -94,13 +96,16 @@ Remove-Item -LiteralPath $testRoot -Recurse -Force
    python -c "import secrets; print(secrets.token_urlsafe(24))"
    ```
 
-   Keep it out of source control and share it with judges privately. Render
-   generates `DEMO_SESSION_SECRET` for signed, HttpOnly sessions.
+   Enter the generated value directly in Render; do not commit or share it
+   publicly. Render generates `DEMO_SESSION_SECRET` for signed, HttpOnly sessions.
 3. Optionally add `GEMINI_API_KEY` in Render's environment settings to enable
    live Gemini features. Do not put the key in this repository or frontend
    variables.
 4. Open the Render URL, enter the access code, and use only synthetic data.
    Demo sessions expire after 12 hours; **Lock demo** ends the current session.
+   Do not upgrade the service or add a persistent disk if you want to keep this
+   deployment free. Render Free has usage limits; check the Render dashboard
+   for current limits and usage.
 
 The frontend and API are served from the same origin. The public health check
 only returns service status; application API routes require a valid demo
