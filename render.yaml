@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: permitpilot-private-demo
+    runtime: docker
+    region: singapore
+    plan: 0.5c-512mb
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    envVars:
+      - key: APP_ENV
+        value: private_demo
+      - key: DATABASE_PATH
+        value: /var/data/permitpilot.db
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: DEMO_ACCESS_CODE
+        sync: false
+      - key: DEMO_SESSION_SECRET
+        generateValue: true
+    disk:
+      name: permitpilot-demo-data
+      mountPath: /var/data
+      sizeGB: 1
